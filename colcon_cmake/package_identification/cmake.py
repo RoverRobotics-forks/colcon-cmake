@@ -47,6 +47,26 @@ def extract_data(cmakelists_txt):
     :param Path cmakelists_txt: The path of the CMakeLists.txt file
     :rtype: dict
     """
+    import subprocess
+    import tempfile
+    to = None
+    te = None
+    with tempfile.TemporaryDirectory() as td:
+        # s = subprocess.run(['cmake', '-S',
+        #     str(cmakelists_txt.parent.resolve()),
+        #     '-B',str(td),'-L'])
+        t = subprocess.run(['cmake', '-L',
+            '-S', str(cmakelists_txt.parent.resolve())
+            ,'-B', str(td),
+            '--trace','--trace-redirect='+str(Path(td)/'trace.txt'),
+            '--graph='+str(Path(td)/'graph.dot')],
+            capture_output=True,text=True)
+        to = t.stdout
+        te = t.stderr
+        pass
+    pass
+    pass
+
     content = extract_content(cmakelists_txt)
 
     data = {}
